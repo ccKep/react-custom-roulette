@@ -9,7 +9,7 @@ var drawRadialBorder = function (ctx, centerX, centerY, insideRadius, outsideRad
     ctx.stroke();
 };
 var drawWheel = function (canvasRef, data, drawWheelProps) {
-    var _a, _b, _c, _d, _e;
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
     /* eslint-disable prefer-const */
     var outerBorderColor = drawWheelProps.outerBorderColor, outerBorderWidth = drawWheelProps.outerBorderWidth, innerRadius = drawWheelProps.innerRadius, innerBorderColor = drawWheelProps.innerBorderColor, innerBorderWidth = drawWheelProps.innerBorderWidth, radiusLineColor = drawWheelProps.radiusLineColor, radiusLineWidth = drawWheelProps.radiusLineWidth, fontFamily = drawWheelProps.fontFamily, fontWeight = drawWheelProps.fontWeight, fontSize = drawWheelProps.fontSize, fontStyle = drawWheelProps.fontStyle, perpendicularText = drawWheelProps.perpendicularText, prizeMap = drawWheelProps.prizeMap, textDistance = drawWheelProps.textDistance;
     var QUANTITY = getQuantity(prizeMap);
@@ -17,7 +17,7 @@ var drawWheel = function (canvasRef, data, drawWheelProps) {
     innerBorderWidth *= 2;
     radiusLineWidth *= 2;
     var canvas = canvasRef.current;
-    if (canvas === null || canvas === void 0 ? void 0 : canvas.getContext('2d')) {
+    if ((_a = canvas) === null || _a === void 0 ? void 0 : _a.getContext('2d')) {
         var ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, 500, 500);
         ctx.strokeStyle = 'transparent';
@@ -31,7 +31,7 @@ var drawWheel = function (canvasRef, data, drawWheelProps) {
         var centerX = canvas.width / 2;
         var centerY = canvas.height / 2;
         for (var i = 0; i < data.length; i++) {
-            var _f = data[i], optionSize = _f.optionSize, style = _f.style;
+            var _l = data[i], optionSize = _l.optionSize, style = _l.style;
             var arc = (optionSize && (optionSize * (2 * Math.PI)) / QUANTITY) ||
                 (2 * Math.PI) / QUANTITY;
             var endAngle = startAngle + arc;
@@ -71,19 +71,19 @@ var drawWheel = function (canvasRef, data, drawWheelProps) {
             if (data[i].image) {
                 // CASE IMAGE
                 contentRotationAngle +=
-                    data[i].image && !((_a = data[i].image) === null || _a === void 0 ? void 0 : _a.landscape) ? Math.PI / 2 : 0;
+                    data[i].image && !((_b = data[i].image) === null || _b === void 0 ? void 0 : _b.landscape) ? Math.PI / 2 : 0;
                 ctx.rotate(contentRotationAngle);
-                var img = ((_b = data[i].image) === null || _b === void 0 ? void 0 : _b._imageHTML) || new Image();
-                ctx.drawImage(img, (img.width + (((_c = data[i].image) === null || _c === void 0 ? void 0 : _c.offsetX) || 0)) / -2, -(img.height -
-                    (((_d = data[i].image) === null || _d === void 0 ? void 0 : _d.landscape) ? 0 : 90) + // offsetY correction for non landscape images
-                    (((_e = data[i].image) === null || _e === void 0 ? void 0 : _e.offsetY) || 0)) / 2, img.width, img.height);
+                var img = ((_c = data[i].image) === null || _c === void 0 ? void 0 : _c._imageHTML) || new Image();
+                ctx.drawImage(img, (img.width + (((_d = data[i].image) === null || _d === void 0 ? void 0 : _d.offsetX) || 0)) / -2, -(img.height -
+                    (((_e = data[i].image) === null || _e === void 0 ? void 0 : _e.landscape) ? 0 : 90) + // offsetY correction for non landscape images
+                    (((_f = data[i].image) === null || _f === void 0 ? void 0 : _f.offsetY) || 0)) / 2, img.width, img.height);
             }
             else {
                 // CASE TEXT
                 contentRotationAngle += perpendicularText ? Math.PI / 2 : 0;
                 ctx.rotate(contentRotationAngle);
                 var text = data[i].option;
-                ctx.font = "".concat((style === null || style === void 0 ? void 0 : style.fontStyle) || fontStyle, " ").concat((style === null || style === void 0 ? void 0 : style.fontWeight) || fontWeight, " ").concat(((style === null || style === void 0 ? void 0 : style.fontSize) || fontSize) * 2, "px ").concat((style === null || style === void 0 ? void 0 : style.fontFamily) || fontFamily, ", Helvetica, Arial");
+                ctx.font = (((_g = style) === null || _g === void 0 ? void 0 : _g.fontStyle) || fontStyle) + " " + (((_h = style) === null || _h === void 0 ? void 0 : _h.fontWeight) || fontWeight) + " " + (((_j = style) === null || _j === void 0 ? void 0 : _j.fontSize) || fontSize) * 2 + "px " + (((_k = style) === null || _k === void 0 ? void 0 : _k.fontFamily) || fontFamily) + ", Helvetica, Arial";
                 ctx.fillStyle = (style && style.textColor);
                 ctx.fillText(text || '', -ctx.measureText(text || '').width / 2, fontSize / 2.7);
             }

@@ -1,3 +1,4 @@
+/// <reference types="react" />
 import { PointerProps, WheelData } from './types';
 interface Props {
     mustStartSpinning: boolean;

@@ -106,6 +106,8 @@ export const Wheel = ({
   const [isFontLoaded, setIsFontLoaded] = useState(false);
   const mustStopSpinning = useRef<boolean>(false);
 
+  const imageCache = useRef<Map<string, HTMLImageElement>>(new Map());
+
   const classKey = makeClassKey(5);
 
   const normalizedSpinDuration = Math.max(0.01, spinDuration);
@@ -155,12 +157,11 @@ export const Wheel = ({
       }
       if (data[i].image) {
         setTotalImages(prevCounter => prevCounter + 1);
-
-        const img = new Image();
-        img.src = data[i].image?.uri || '';
-        img.onload = () => {
-          img.height = 200 * (data[i].image?.sizeMultiplier || 1);
-          img.width = (img.naturalWidth / img.naturalHeight) * img.height;
+        if (
+          data[i].image?.uri !== undefined &&
+          imageCache.current.has(data[i].image?.uri || '')
+        ) {
+          const img = imageCache.current.get(data[i].image!.uri);
           wheelDataAux[i].image = {
             uri: data[i].image?.uri || '',
             offsetX: data[i].image?.offsetX || 0,
@@ -170,8 +171,27 @@ export const Wheel = ({
             _imageHTML: img,
           };
           setLoadedImagesCounter(prevCounter => prevCounter + 1);
-          setRouletteUpdater(prevState => !prevState);
-        };
+        } else {
+          const img = new Image();
+          img.src = data[i].image?.uri || '';
+          img.onload = () => {
+            img.height = 200 * (data[i].image?.sizeMultiplier || 1);
+            img.width = (img.naturalWidth / img.naturalHeight) * img.height;
+            wheelDataAux[i].image = {
+              uri: data[i].image?.uri || '',
+              offsetX: data[i].image?.offsetX || 0,
+              offsetY: data[i].image?.offsetY || 0,
+              landscape: data[i].image?.landscape || false,
+              sizeMultiplier: data[i].image?.sizeMultiplier || 1,
+              _imageHTML: img,
+            };
+            setLoadedImagesCounter(prevCounter => prevCounter + 1);
+            setRouletteUpdater(prevState => !prevState);
+            if (data[i].image?.uri) {
+              imageCache.current.set(data[i].image!.uri, img);
+            }
+          };
+        }
       }
     }
 
